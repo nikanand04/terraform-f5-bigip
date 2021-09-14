@@ -1,0 +1,48 @@
+{
+    "class": "AS3",
+    "action": "deploy",
+    "persist": true,
+    "declaration": {
+    "class": "ADC",
+    "schemaVersion": "3.21.0",
+    "id": "5489432",
+    "label": "ASM_policy_external_URL",
+    "remark": "ASM_policy_external_URL",
+    "Sample_app_sec_02": {
+        "class": "Tenant",
+        "Application_2": {
+            "class": "Application",
+            "template": "http",
+            "serviceMain": {
+                "class": "Service_HTTP",
+                "virtualPort": 80,
+                "virtualAddresses": [
+                    "10.128.10.102"
+                ],
+                "snat": "auto",
+                "pool": "Pool1",
+                "policyWAF": {
+                    "use": "My_ASM_Policy"
+                }
+            },
+            "Pool1": {
+                "class": "Pool",
+                "monitors": [
+                    "http"
+                ],
+                "members": [{
+                    "servicePort": 80,
+                    "serverAddresses": [
+                        "10.128.20.20"
+                    ]
+                }]
+            },
+            "My_ASM_Policy": {
+                "class": "WAF_Policy",
+                "url": "https://raw.githubusercontent.com/scshitole/more-terraform/master/Sample_app_sec_02_waf_policy.xml",
+                "ignoreChanges": true
+                }
+            }
+        }
+    }
+}
